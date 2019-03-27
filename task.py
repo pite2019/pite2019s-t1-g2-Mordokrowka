@@ -1,28 +1,39 @@
-# Write a module that will simulate autonomic car.
-# The simulation is event based, an example:
-# car1 = Car()
-# car1.act(event)
-# print(car1.wheel_angle, car1.speed)
-# where event can be anything you want, i.e. :
-# `('obstacle', 10)` where `10` is a duration (time) of the event.
-##The program should:
-# - act on the event
-# - print out current steering wheel angle, and speed
-# - run in infinite loop
-# - until user breaks the loop
+#Based on what Kuba said about lab instructions, took me 35 minutes.
+import matplotlib.pyplot as plt
+import random
+import math
+import time
 
-#The level of realism in simulation is of your choice, but more sophisticated solutions are better.
-#If you can thing of any other features, you can add them.
-#Make intelligent use of pythons syntactic sugar (overloading, iterators, generators, etc)
-#Most of all: CREATE GOOD, RELIABLE, READABLE CODE.
-#The goal of this task is for you to SHOW YOUR BEST python programming skills.
-#Impress everyone with your skills, show off with your code.
-#
-#Your program must be runnable with command "python task.py".
-#Show some usecases of your library in the code (print some things)
-#
-#When you are done upload this code to github repository. 
-#
-#Delete these comments before commit!
-#Good luck.
+class driver:
+	pos_x=0
+	vertical_angle=0
+	distance_to_obstacle=0
+
+	def get_parameters(self):
+		print("Turning angle: " + str(self.vertical_angle)+ " Car position: " + str(self.pos_x) )
+		print("Next obstacle: " + str(self.distance_to_obstacle)+ "m")
+	def steering_step(self):
+		if self.distance_to_obstacle == 0:
+			self.distance_to_obstacle=round(random.uniform(0,100) +1)
+		if self.distance_to_obstacle > 40:
+			self.vertical_angle=math.atan(self.pos_x/10)
+		else:
+			self.vertical_angle=math.atan((1+self.pos_x)/self.distance_to_obstacle)
+		self.distance_to_obstacle = self.distance_to_obstacle-1
+		self.pos_x=self.pos_x - math.sin(self.vertical_angle)
+
+No1 = driver()
+plt.figure()
+while 1:
+				
+	No1.steering_step()
+	No1.get_parameters()
+	plt.plot([0.5,0.5],[0,100])
+	plt.plot([-1.5,-1.5],[0,100])
+	plt.plot([-0.5,-0.5],[0,100],'-.')
+	plt.plot([-0.5,0.5],[No1.distance_to_obstacle,No1.distance_to_obstacle], color='black')
+	plt.plot(No1.pos_x,10,'r*')
+	plt.savefig('test.png')
+	plt.clf()
+time.sleep(0.2)
     
